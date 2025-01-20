@@ -1,20 +1,34 @@
+import { useState, ChangeEvent, FormEvent } from "react"
+import { useSearchParams } from "react-router"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import "./MarvelList.css"
 import { fetchCharacters } from "../../utils"
 import { ICharacter } from "./types"
+import Button from "../../components/Button"
+import Input from "../../components/Input"
 
 export function MarvelList() {
-  const { data, status, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery({
-      queryKey: ["characters"],
-      queryFn: fetchCharacters,
-      initialPageParam: 0,
-      getNextPageParam: (lastPage) => {
-        const { offset, limit, total } = lastPage.data
-        const nextOffset = offset + limit
-        return nextOffset < total ? nextOffset : undefined
-      },
-    })
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [inputValue, setInputValue] = useState("")
+  const searchValue = searchParams.get("search") || ""
+
+  const {
+    data,
+    status,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    refetch,
+  } = useInfiniteQuery({
+    queryKey: ["characters", searchValue],
+    queryFn: fetchCharacters,
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
+      const { offset, limit, total } = lastPage.data
+      const nextOffset = offset + limit
+      return nextOffset < total ? nextOffset : undefined
+    },
+  })
   if (status === "pending") {
     return <div>Carregando, guenta o coração...</div>
   }
@@ -34,9 +48,50 @@ export function MarvelList() {
     buttonText = "Nada mais para carregar"
   }
 
+  const handleSearchChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(target.value)
+  }
+
+  const handleSearchSubmit = (e: FormEvent) => {
+    e.preventDefault()
+    setSearchParams((state) => {
+      if (inputValue) {
+        state.set("search", inputValue)
+      } else {
+        state.delete("search")
+      }
+      return state
+    })
+    refetch()
+  }
+
+  const handleClearSearch = () => {
+    setInputValue("")
+    setSearchParams((state) => {
+      state.delete("search")
+      return state
+    })
+    refetch()
+  }
   return (
     <div>
+      <header>Marvel</header>
       <h1>bem vindo a Marvel</h1>
+      <form onSubmit={handleSearchSubmit}>
+        <Input
+          ariaLabel="input"
+          type="text"
+          value={inputValue}
+          onChange={handleSearchChange}
+          placeholder="Pesquise seu heroi"
+        />
+        <Button ariaLabel="busca" type="submit">
+          Buscar
+        </Button>
+        <Button ariaLabel="limpar pesquisa" onClick={handleClearSearch}>
+          Limpar pesquisa
+        </Button>
+      </form>
       <ul>
         {data.pages.map((page, i) => (
           <div key={i}>
@@ -74,13 +129,14 @@ export function MarvelList() {
           </div>
         ))}
       </ul>
-      <button
-        onClick={() => fetchNextPage()}
+
+      <Button
+        ariaLabel="carrega personagens"
+        onClick={fetchNextPage}
         disabled={disabledButton}
-        aria-label="Carregar mais personagens"
       >
         {buttonText}
-      </button>
+      </Button>
     </div>
   )
 }

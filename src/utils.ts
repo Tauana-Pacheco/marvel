@@ -10,14 +10,20 @@ const generateAuthParams = () => {
   return `ts=${timestamp}&apikey=${PUBLIC_KEY}&hash=${hash}`
 }
 
+interface IFetchCharacters {
+  pageParam: number
+  queryKey: string[]
+}
+
 export const fetchCharacters = async ({
   pageParam = 0,
-}: {
-  pageParam: number
-}) => {
-  const response = await fetch(
-    `${URL_BASE}/characters?offset=${pageParam}&limit=20&${generateAuthParams()}`
-  )
-  const data = await response.json()
+  queryKey,
+}: IFetchCharacters) => {
+  const [, searchQuery] = queryKey
+  const baseUrl = `${URL_BASE}/characters?offset=${pageParam}&limit=20&${generateAuthParams()}`
+  const url = searchQuery ? `${baseUrl}&nameStartsWith=${searchQuery}` : baseUrl
+
+  const res = await fetch(url)
+  const data = await res.json()
   return data
 }
