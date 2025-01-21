@@ -30,7 +30,7 @@ export function MarvelList() {
     },
   })
   if (status === "pending") {
-    return <div>Carregando, guenta o coração...</div>
+    return <div>Pera, os herois já estão chegando</div>
   }
 
   if (status === "error") {
@@ -85,13 +85,14 @@ export function MarvelList() {
           onChange={handleSearchChange}
           placeholder="Pesquise seu heroi"
         />
-        <Button ariaLabel="busca" type="submit">
-          Buscar
-        </Button>
-        <Button ariaLabel="limpar pesquisa" onClick={handleClearSearch}>
-          Limpar pesquisa
-        </Button>
+        <Button ariaLabel="busca" type="submit" label="Buscar" />
+        <Button
+          ariaLabel="limpar pesquisa"
+          onClick={handleClearSearch}
+          label="Limpar pesquisa"
+        />
       </form>
+
       <ul>
         {data.pages.map((page, i) => (
           <div key={i}>
@@ -134,9 +135,8 @@ export function MarvelList() {
         ariaLabel="carrega personagens"
         onClick={fetchNextPage}
         disabled={disabledButton}
-      >
-        {buttonText}
-      </Button>
+        label={buttonText}
+      />
     </div>
   )
 }

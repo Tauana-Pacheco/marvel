@@ -5,13 +5,13 @@ interface IButton {
   onClick?: () => void
   type?: "button" | "submit" | "reset"
   disabled?: boolean
-  children?: ReactNode
+  label?: ReactNode
 }
 
-export default function Button({ children, disabled, onClick, type }: IButton) {
+export default function Button({ label, disabled, onClick, type }: IButton) {
   return (
     <button disabled={disabled} type={type} onClick={onClick}>
-      {children}
+      {label}
     </button>
   )
 }
