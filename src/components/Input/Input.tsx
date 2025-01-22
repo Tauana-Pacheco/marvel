@@ -2,6 +2,7 @@ import { ChangeEvent } from "react"
 
 export interface IInput {
   ariaLabel: string
+  id: string
   value: string
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
   placeholder: string
@@ -10,6 +11,7 @@ export interface IInput {
 
 export default function Input({
   ariaLabel,
+  id,
   value,
   onChange,
   placeholder,
@@ -18,6 +20,7 @@ export default function Input({
   return (
     <input
       aria-label={ariaLabel}
+      id={id}
       value={value}
       onChange={onChange}
       placeholder={placeholder}

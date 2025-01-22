@@ -4,8 +4,10 @@ import { useInfiniteQuery } from "@tanstack/react-query"
 import "./MarvelList.css"
 import { fetchCharacters } from "../../utils"
 import { ICharacter } from "./types"
+import Card from "../../components/Card"
 import Button from "../../components/Button"
 import Input from "../../components/Input"
+import { MARVEL_LIST as dict } from "./dict"
 
 export function MarvelList() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -30,22 +32,11 @@ export function MarvelList() {
     },
   })
   if (status === "pending") {
-    return <div>Pera, os herois já estão chegando</div>
+    return <div data-testid="loading">{dict.isLoading}</div>
   }
 
   if (status === "error") {
     return <div>Ihh deu ruim :/</div>
-  }
-
-  const disabledButton = !hasNextPage || isFetchingNextPage
-
-  let buttonText
-  if (isFetchingNextPage) {
-    buttonText = "Carregando mais..."
-  } else if (hasNextPage) {
-    buttonText = "Carregar mais"
-  } else {
-    buttonText = "Nada mais para carregar"
   }
 
   const handleSearchChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -73,35 +64,55 @@ export function MarvelList() {
     })
     refetch()
   }
+
+  const noResults = data?.pages?.[0]?.data?.results.length === 0
+  const isSearchEmpty = noResults && searchValue
+
+  let buttonText
+  if (isFetchingNextPage) {
+    buttonText = dict.loadingMore
+  } else if (hasNextPage) {
+    buttonText = dict.loadMore
+  } else {
+    buttonText = dict.noLoading
+  }
+
+  const disabledButton = !hasNextPage || isFetchingNextPage
+
   return (
     <div>
-      <header>Marvel</header>
-      <h1>bem vindo a Marvel</h1>
+      <header>{dict.header}</header>
+      <h1>{dict.welcome}</h1>
       <form onSubmit={handleSearchSubmit}>
         <Input
           ariaLabel="input"
           type="text"
+          id="input-search"
           value={inputValue}
           onChange={handleSearchChange}
-          placeholder="Pesquise seu heroi"
+          placeholder={dict.searchHero}
         />
-        <Button ariaLabel="busca" type="submit" label="Buscar" />
-        <Button
-          ariaLabel="limpar pesquisa"
-          onClick={handleClearSearch}
-          label="Limpar pesquisa"
-        />
+        <Button ariaLabel="busca" label={dict.search} type="submit" />
+        {noResults && (
+          <Button
+            ariaLabel="limpar pesquisa"
+            label={dict.cleanSearch}
+            onClick={handleClearSearch}
+          />
+        )}
       </form>
+      {isSearchEmpty && (
+        <p data-testid="character-not-found">{dict.characterNotFound}</p>
+      )}
 
       <ul>
         {data.pages.map((page, i) => (
-          <div key={i}>
-            {page.data.results?.map((character: ICharacter) => (
+          <Card key={i} id="card">
+            {page?.data.results?.map((character: ICharacter) => (
               <li key={character.id}>
-                <h2>Nome</h2>
+                <h2>{dict.name}</h2>
                 <p>{character.name}</p>
 
-                <h2>Imagem</h2>
                 {character.thumbnail && (
                   <img
                     src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
@@ -109,34 +120,27 @@ export function MarvelList() {
                   />
                 )}
 
-                <h2>Descrição</h2>
-                <p>
-                  {character.description || "Nenhuma descrição disponíveln:/"}
-                </p>
+                <h2>{dict.description}</h2>
+                <p>{character.description || dict.noDescription}</p>
 
-                <h2>Número de Participações em Séries</h2>
-                <p>
-                  {character.series?.available ||
-                    "Nenhum número foi encontrado "}
-                </p>
+                <h2>{dict.seriesAvailable}</h2>
+                <p>{character.series?.available || dict.noResults}</p>
 
-                <h2>Número de Participações em Quadrinhos</h2>
-                <p>
-                  {character.stories?.available ||
-                    "Nenhum número foi encontrado "}
-                </p>
+                <h2>{dict.storiesAvailable}</h2>
+                <p>{character.stories?.available || dict.noResults}</p>
               </li>
             ))}
-          </div>
+          </Card>
         ))}
       </ul>
-
-      <Button
-        ariaLabel="carrega personagens"
-        onClick={fetchNextPage}
-        disabled={disabledButton}
-        label={buttonText}
-      />
+      {!isSearchEmpty && (
+        <Button
+          ariaLabel="carrega personagens"
+          onClick={fetchNextPage}
+          disabled={disabledButton}
+          label={buttonText}
+        />
+      )}
     </div>
   )
 }

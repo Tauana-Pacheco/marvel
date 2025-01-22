@@ -8,10 +8,10 @@ describe("<Input/>", () => {
   it("should render the input with the correct placeholder and value", () => {
     const mockProps: IInput = {
       ariaLabel: "test-input",
-      value: "Initial Value",
       onChange: mockFn,
       placeholder: "Enter text",
       type: "text",
+      value: "Initial Value",
     }
 
     render(<Input {...mockProps} />)
@@ -24,10 +24,10 @@ describe("<Input/>", () => {
   it("should accept different input types", () => {
     const mockProps: IInput = {
       ariaLabel: "password-input",
-      value: "",
       onChange: mockFn,
       placeholder: "Enter password",
       type: "password",
+      value: "",
     }
 
     render(<Input {...mockProps} />)
