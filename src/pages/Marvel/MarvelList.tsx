@@ -87,7 +87,6 @@ export function MarvelList() {
         <Input
           ariaLabel="input"
           type="text"
-          id="input-search"
           value={inputValue}
           onChange={handleSearchChange}
           placeholder={dict.searchHero}
