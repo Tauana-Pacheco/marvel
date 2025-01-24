@@ -6,8 +6,8 @@ export const MARVEL_LIST = {
   search: "Buscar",
   searchHero: "Busque pelo nome do seu herói",
   cleanSearch: "Limpar pesquisa",
-  seriesAvailable: "Número de Participações em Séries",
-  storiesAvailable: "Número de Participações em Quadrinhos",
+  seriesAvailable: "Participações em Séries",
+  comics: "Participações em Quadrinhos",
   noResults: "Nenhum número foi encontrado", // melhorar o nome
   noDescription: "Nenhuma descrição disponíveln :/",
   isLoading: "Pera, os herois já estão chegando",

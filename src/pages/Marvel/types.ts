@@ -3,17 +3,25 @@ interface IImage {
   extension?: string
 }
 
-interface INumberOfApperces {
-  available?: number
+export interface IComics {
+  description?: string
+  id: number
+  thumbnail?: IImage
+  characters?: ICharacter[]
+  title: string
 }
 
 export interface ICharacter {
-  id?: number
+  id: number
   name?: string
   description?: string
   thumbnail?: IImage
-  series?: INumberOfApperces
-  stories?: INumberOfApperces
+  comics: {
+    items: {
+      name: string
+    }
+  }
+  series?: IComics
 }
 
 export interface ICharacterDataContainer {

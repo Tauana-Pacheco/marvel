@@ -6,6 +6,7 @@ export interface IInput {
   onChange: (event: ChangeEvent<HTMLInputElement>) => void
   placeholder: string
   type: "text" | "email" | "password"
+  className?: string
 }
 
 export default function Input({
@@ -14,11 +15,13 @@ export default function Input({
   onChange,
   placeholder,
   type = "text",
+  className,
 }: IInput) {
   return (
     <input
       aria-label={ariaLabel}
       value={value}
+      className={className}
       onChange={onChange}
       placeholder={placeholder}
       type={type}

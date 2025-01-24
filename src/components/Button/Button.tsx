@@ -6,11 +6,23 @@ interface IButton {
   type?: "button" | "submit" | "reset"
   disabled?: boolean
   label?: ReactNode
+  className?: string
 }
 
-export default function Button({ label, disabled, onClick, type }: IButton) {
+export default function Button({
+  className,
+  label,
+  disabled,
+  onClick,
+  type,
+}: IButton) {
   return (
-    <button disabled={disabled} type={type} onClick={onClick}>
+    <button
+      className={className}
+      disabled={disabled}
+      type={type}
+      onClick={onClick}
+    >
       {label}
     </button>
   )

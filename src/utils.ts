@@ -27,3 +27,13 @@ export const fetchCharacters = async ({
   const data = await res.json()
   return data
 }
+
+export const fetchComics = async (id: number) => {
+  const response = await fetch(
+    `${URL_BASE}/characters/${id}/comics?${generateAuthParams()}`
+  )
+  const data = await response.json()
+  return data
+}
+
+// REVER UTILS
