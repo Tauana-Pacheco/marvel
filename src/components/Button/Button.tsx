@@ -7,10 +7,12 @@ interface IButton {
   disabled?: boolean
   label?: ReactNode
   className?: string
+  children?: ReactNode
 }
 
 export default function Button({
   className,
+  children,
   label,
   disabled,
   onClick,
@@ -24,6 +26,7 @@ export default function Button({
       onClick={onClick}
     >
       {label}
+      {children}
     </button>
   )
 }

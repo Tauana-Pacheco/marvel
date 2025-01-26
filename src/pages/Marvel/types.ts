@@ -2,26 +2,19 @@ interface IImage {
   path?: string
   extension?: string
 }
-
-export interface IComics {
-  description?: string
-  id: number
-  thumbnail?: IImage
-  characters?: ICharacter[]
-  title: string
+interface IItemsName {
+  name: string
 }
-
+interface IItems {
+  items: IItemsName[]
+}
 export interface ICharacter {
   id: number
   name?: string
   description?: string
   thumbnail?: IImage
-  comics: {
-    items: {
-      name: string
-    }
-  }
-  series?: IComics
+  comics?: IItems
+  series?: IItems
 }
 
 export interface ICharacterDataContainer {
@@ -34,4 +27,9 @@ export interface ICharacterDataContainer {
 
 export interface ICharacterDataWrapper {
   data?: ICharacterDataContainer
+}
+
+export interface IFetchCharacters {
+  pageParam?: number
+  queryKey: string[]
 }

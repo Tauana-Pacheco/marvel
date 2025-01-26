@@ -2,49 +2,62 @@ import { render, screen, waitFor } from "@testing-library/react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { BrowserRouter } from "react-router"
 import { MarvelList } from "./MarvelList"
-import { fetchCharacters } from "../../utils"
 import { Mock, vi } from "vitest"
-import { listOfCharactersMock } from "./__mocks__/characters"
+import { fetchCharacters } from "./utils"
 
-vi.mock("../../utils", () => ({
+vi.mock("./utils", () => ({
   fetchCharacters: vi.fn(),
 }))
 
+const mockData = {
+  data: {
+    results: [
+      {
+        id: 1,
+        name: "Spider-Man",
+        description: "Friendly neighborhood Spider-Man.",
+        thumbnail: { path: "spider-man-image", extension: "jpg" },
+        comics: { items: [{ name: "Amazing Fantasy #15" }] },
+        series: { items: [{ name: "Spider-Man Series" }] },
+      },
+      {
+        id: 2,
+        name: "Iron Man",
+        description: "Genius, billionaire, playboy, philanthropist.",
+        thumbnail: { path: "iron-man-image", extension: "png" },
+        comics: { items: [{ name: "Iron Man #1" }] },
+        series: { items: [{ name: "Iron Man Series" }] },
+      },
+    ],
+    offset: 0,
+    limit: 2,
+    total: 2,
+  },
+}
+
 const queryClient = new QueryClient()
 
-const renderComponent = () =>
-  render(
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <MarvelList />
-      </BrowserRouter>
-    </QueryClientProvider>
-  )
+describe("MarvelList Component", () => {
+  it("should display a list of characters", async () => {
+    ;(fetchCharacters as Mock).mockResolvedValueOnce(mockData)
 
-describe("<MarvelList />", () => {
-  beforeEach(() => {
-    queryClient.clear()
-  })
-
-  it("should render characters list", async () => {
-    ;(fetchCharacters as Mock).mockImplementationOnce(() =>
-      Promise.resolve(listOfCharactersMock)
+    render(
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <MarvelList />
+        </BrowserRouter>
+      </QueryClientProvider>
     )
 
-    renderComponent()
+    screen.debug(undefined, Infinity)
+    expect(screen.getByTestId("loading")).toBeInTheDocument()
 
-    await waitFor(() => {
-      expect(screen.getByText("A.I.M.")).toBeInTheDocument()
-      expect(
-        screen.getByText(
-          "AIM is a terrorist organization bent on destroying the world."
-        )
-      ).toBeInTheDocument()
+    await waitFor(() =>
+      expect(screen.getByText("Spider-Man")).toBeInTheDocument()
+    )
 
-      expect(screen.getByText("Absorbing Man")).toBeInTheDocument()
-      expect(
-        screen.getByText("Nenhuma descrição disponíveln :/")
-      ).toBeInTheDocument()
-    })
+    await waitFor(() =>
+      expect(screen.getByText("Iron Man")).toBeInTheDocument()
+    )
   })
 })

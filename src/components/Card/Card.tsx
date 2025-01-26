@@ -3,12 +3,13 @@ import { ReactNode } from "react"
 interface ICard {
   children: ReactNode
   id: string
+  className?: string
 }
 
-export default function Card({ children, id }: ICard) {
+export default function Card({ children, className, id }: ICard) {
   return (
-    <div id={id} data-testid={id}>
+    <section id={id} data-testid={id} className={className}>
       {children}
-    </div>
+    </section>
   )
 }
