@@ -19,7 +19,6 @@ export default function Accordion({ children, title }: IAccordion) {
         aria-expanded={isOpen}
         data-testid="accordion-button"
         ariaLabel="accordion-button"
-        label={isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
       >
         <p className="accordion">{title}</p>
         <span data-testid={isOpen ? "up-arrow" : "down-arrow"}>
