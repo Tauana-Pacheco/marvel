@@ -5,7 +5,6 @@ interface IButton {
   onClick?: () => void
   type?: "button" | "submit" | "reset"
   disabled?: boolean
-  label?: ReactNode
   className?: string
   children?: ReactNode
 }
@@ -13,7 +12,6 @@ interface IButton {
 export default function Button({
   className,
   children,
-  label,
   disabled,
   onClick,
   type,
@@ -25,7 +23,6 @@ export default function Button({
       type={type}
       onClick={onClick}
     >
-      {label}
       {children}
     </button>
   )

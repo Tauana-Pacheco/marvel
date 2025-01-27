@@ -3,17 +3,25 @@
 @tailwind utilities;
 
 body {
-  @apply bg-slate-100 min-h-screen;
+  @apply bg-dark text-primary min-h-screen;
 }
-
 @layer base {
-  h1 {
+  h1,
+  h2,
+  h3 {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
   }
 }
 @layer components {
   .accordion {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: #f3f3f4;
+  }
+
+  .button {
     font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-      "Lucida Sans", Arial, sans-serif;
+      "Lucida Sans", Arial, sans-serif, sans-serif;
+    cursor: pointer;
+    border-radius: 4px;
   }
 }

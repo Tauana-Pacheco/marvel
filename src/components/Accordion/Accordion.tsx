@@ -15,12 +15,12 @@ export default function Accordion({ children, title }: IAccordion) {
     <div className=" pb-2 mt-2">
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full text-left font-semibold text-gray-800"
+        className="flex items-center justify-between w-full text-left leading-relaxed border-b border-primary"
         aria-expanded={isOpen}
         data-testid="accordion-button"
-        ariaLabel="accordion-button"
+        ariaLabel="Botão de busca do Accordion"
       >
-        <p className="accordion">{title}</p>
+        <p className="font-semibold">{title}</p>
         <span data-testid={isOpen ? "up-arrow" : "down-arrow"}>
           {isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
         </span>
