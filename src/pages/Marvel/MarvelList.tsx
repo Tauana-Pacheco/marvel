@@ -1,7 +1,6 @@
-import { useState, ChangeEvent, FormEvent } from "react"
+import { useState, ChangeEvent, FormEvent, useEffect } from "react"
 import { useSearchParams } from "react-router"
 import { useInfiniteQuery } from "@tanstack/react-query"
-import "./MarvelList.css"
 import { fetchCharacters } from "./utils"
 import { ICharacter } from "./types"
 import Button from "../../components/Button"
@@ -10,7 +9,7 @@ import { MARVEL_LIST as dict } from "./dict"
 import Card from "../../components/Card"
 import Accordion from "../../components/Accordion"
 import { FaSearch } from "react-icons/fa"
-import { IoClose } from "react-icons/io5"
+import { AiFillCloseSquare } from "react-icons/ai"
 
 export function MarvelList() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -36,12 +35,16 @@ export function MarvelList() {
     },
   })
 
+  useEffect(() => {
+    refetch()
+  }, [searchParams, refetch])
+
   if (status === "pending") {
-    return <div data-testid="loading">{dict.isLoading}</div>
+    return <div className="font-mono">{dict.isLoading}</div>
   }
 
   if (status === "error") {
-    return <div>Ihh deu ruim :/</div>
+    return <div className="font-mono">{dict.error}</div>
   }
 
   const handleSearchChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +61,6 @@ export function MarvelList() {
       }
       return state
     })
-    refetch()
   }
 
   const handleClearSearch = () => {
@@ -67,10 +69,10 @@ export function MarvelList() {
       state.delete("search")
       return state
     })
-    refetch()
   }
 
-  const noResults = data?.pages?.[0]?.data?.results.length === 0
+  const results = data?.pages?.[0]?.data?.results
+  const noResults = results.length === 0
   const isSearchEmpty = noResults && searchValue
 
   let buttonText
@@ -82,51 +84,60 @@ export function MarvelList() {
     buttonText = dict.noLoading
   }
 
-  const cleanSearch =
-    (data?.pages?.[0]?.data?.results.length > 0 && searchValue) || !hasNextPage
+  const cleanSearch = (results.length > 0 && searchValue) || !hasNextPage
   const disabledButton = !hasNextPage || isFetchingNextPage || !dict.noLoading
+  const showSearchButton = inputValue !== ""
 
   return (
-    <div>
-      <h1 className="text-2xl  mb-4 ">{dict.welcome}</h1>
+    <>
+      <h1 className="mb-4 text-2xl font-semibold">{dict.title}</h1>
+      <h2 className="mb-4">{dict.info}</h2>
       <form
         onSubmit={handleSearchSubmit}
-        className="mb-4 flex items-center border-b border-gray-400"
+        className="mb-6 flex items-center border-b border-gray-400"
       >
         <Input
-          ariaLabel="input"
+          ariaLabel="Input: Digite o nome"
           type="text"
           value={inputValue}
           onChange={handleSearchChange}
           placeholder={dict.searchHero}
-          className="appearance-none bg-transparent border-none w-full text-gray-700 mr-2 py-1 px-2 leading-tight focus:outline-none"
+          className="w-full"
         />
-        <Button
-          ariaLabel="busca"
-          label={<FaSearch size={20} />}
-          type="submit"
-          className="text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400"
-        />
+        {showSearchButton && (
+          <Button
+            ariaLabel="busca"
+            type="submit"
+            className="text-gray-700 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-400"
+          >
+            {<FaSearch size={20} className="text-primary" />}
+          </Button>
+        )}
         {cleanSearch && (
           <Button
-            ariaLabel="limpar pesquisa"
-            label={<IoClose size={30} />}
+            ariaLabel="Limpar pesquisa"
             onClick={handleClearSearch}
             className="ml-2 text-gray-500 hover:text-gray-700 focus:outline-none"
-          />
+          >
+            {<AiFillCloseSquare size={30} className="text-error" />}
+          </Button>
         )}
       </form>
       {isSearchEmpty && (
-        <p data-testid="character-not-found" className="text-error">
-          {dict.characterNotFound}
-        </p>
+        <div className="pt-6">
+          <p data-testid="character-not-found" className="font-mono">
+            {dict.characterNotFound}
+          </p>
+        </div>
       )}
 
       {data.pages.map((page, i) => (
         <Card key={i} id="card">
-          {page?.data.results?.map((character: ICharacter) => (
-            <div key={character.id} className="cursor-pointer mb-10">
-              <p className="font-bold text-lg font-mono">{character.name}</p>
+          {page?.data.results?.map((character: ICharacter, index: number) => (
+            <div key={index} className="mb-8 rounded ">
+              <h3 className="text-lg font-mono pb-2 font-semibold">
+                {character.name}
+              </h3>
               {character.thumbnail && (
                 <img
                   src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
@@ -134,16 +145,20 @@ export function MarvelList() {
                   className="w-full rounded-lg"
                 />
               )}
-              <Accordion title="Descrição">
-                <p>{character.description || dict.noDescription}</p>
+              <Accordion title={dict.description}>
+                <p className="accordion">
+                  {character.description || dict.noDescription}
+                </p>
               </Accordion>
-              <Accordion title="Participações em Quadrinhos">
+              <Accordion title={dict.comics}>
                 {(character.comics?.items || []).map((item, index) => (
-                  <p key={index}>{item.name}</p>
+                  <p key={index} className="accordion">
+                    {item.name}
+                  </p>
                 )) || <p>{dict.noDescription}</p>}
               </Accordion>
 
-              <Accordion title="Participações em Filmes:">
+              <Accordion title={dict.series}>
                 {(character.series?.items || []).map((item, index) => (
                   <p key={index} className="accordion">
                     {item.name}
@@ -157,13 +172,14 @@ export function MarvelList() {
 
       {!isSearchEmpty && (
         <Button
-          ariaLabel="carrega personagens"
+          ariaLabel="Carregar heróis"
           onClick={fetchNextPage}
           disabled={disabledButton}
-          label={buttonText}
-          className="mt-4 p-2 bg-dark text-slate-50 rounded cursor-pointer"
-        />
+          className="mt-4 p-2 bg-primary text-dark button"
+        >
+          {buttonText}
+        </Button>
       )}
-    </div>
+    </>
   )
 }

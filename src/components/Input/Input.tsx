@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react"
-
+import clsx from "clsx"
 export interface IInput {
   ariaLabel: string
   value: string
@@ -8,6 +8,8 @@ export interface IInput {
   type: "text" | "email" | "password"
   className?: string
 }
+
+const baseStyles = "bg-transparent w-full mr-2 py-1 px-2 focus:outline-none"
 
 export default function Input({
   ariaLabel,
@@ -21,7 +23,7 @@ export default function Input({
     <input
       aria-label={ariaLabel}
       value={value}
-      className={className}
+      className={clsx(baseStyles, className)}
       onChange={onChange}
       placeholder={placeholder}
       type={type}

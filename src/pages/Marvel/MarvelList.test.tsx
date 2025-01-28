@@ -1,63 +1,40 @@
-import { render, screen, waitFor } from "@testing-library/react"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { BrowserRouter } from "react-router"
+import { screen, waitFor } from "@testing-library/react"
 import { MarvelList } from "./MarvelList"
-import { Mock, vi } from "vitest"
+import { vi } from "vitest"
+import { renderWithProviders } from "../../services/tests/index"
 import { fetchCharacters } from "./utils"
+import { listOfCharactersMock } from "./__mocks__/characters"
 
 vi.mock("./utils", () => ({
   fetchCharacters: vi.fn(),
 }))
 
-const mockData = {
-  data: {
-    results: [
-      {
-        id: 1,
-        name: "Spider-Man",
-        description: "Friendly neighborhood Spider-Man.",
-        thumbnail: { path: "spider-man-image", extension: "jpg" },
-        comics: { items: [{ name: "Amazing Fantasy #15" }] },
-        series: { items: [{ name: "Spider-Man Series" }] },
-      },
-      {
-        id: 2,
-        name: "Iron Man",
-        description: "Genius, billionaire, playboy, philanthropist.",
-        thumbnail: { path: "iron-man-image", extension: "png" },
-        comics: { items: [{ name: "Iron Man #1" }] },
-        series: { items: [{ name: "Iron Man Series" }] },
-      },
-    ],
-    offset: 0,
-    limit: 2,
-    total: 2,
-  },
-}
+const mockedFetchCharacters = vi.mocked(fetchCharacters)
 
-const queryClient = new QueryClient()
+describe("<MarvelList />", () => {
+  it("should display an error message when the request fails", async () => {
+    vi.mock("./utils", () => ({
+      fetchCharacters: vi
+        .fn()
+        .mockRejectedValueOnce(new Error("Erro na requisição")),
+    }))
 
-describe("MarvelList Component", () => {
+    renderWithProviders(<MarvelList />)
+
+    await waitFor(() => {
+      expect(screen.queryByText(/Ihh deu ruim/i)).toBeInTheDocument()
+    })
+  })
+
   it("should display a list of characters", async () => {
-    ;(fetchCharacters as Mock).mockResolvedValueOnce(mockData)
+    mockedFetchCharacters.mockResolvedValueOnce(listOfCharactersMock)
 
-    render(
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <MarvelList />
-        </BrowserRouter>
-      </QueryClientProvider>
-    )
-
-    screen.debug(undefined, Infinity)
+    renderWithProviders(<MarvelList />)
     expect(screen.getByTestId("loading")).toBeInTheDocument()
 
-    await waitFor(() =>
-      expect(screen.getByText("Spider-Man")).toBeInTheDocument()
-    )
-
-    await waitFor(() =>
-      expect(screen.getByText("Iron Man")).toBeInTheDocument()
-    )
+    await waitFor(() => {
+      expect(screen.queryByText("Spider-Man")).toBeInTheDocument()
+      expect(screen.queryByText("Iron Man")).toBeInTheDocument()
+    })
   })
 })
