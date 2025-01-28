@@ -50,7 +50,7 @@ Siga os passos abaixo para rodar o projeto em sua máquina:
 
 - Certifique-se de não compartilhar sua private key.
 
-4. \*\*Rode o projeto
+4. **Rode o projeto**
 
    ```bash
    npm run dev
