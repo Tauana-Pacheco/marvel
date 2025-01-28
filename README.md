@@ -1,50 +1,98 @@
-# React + TypeScript + Vite
+# O Infinito Marvel
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este projeto é uma aplicação web onde os usuários podem visualizar e buscar personagens do universo Marvel utilizando a [API da Marevel](https://developer.marvel.com/). Foi desenvolvido com tecnologias modernas para oferecer uma experiência rápida e responsiva.
 
-Currently, two official plugins are available:
+## Tecnologias Utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Vite**: Ferramenta de build rápida para projetos modernos.
+- **React**: Biblioteca JavaScript para construção de interfaces de usuário.
+- **TypeScript**: Superset de JavaScript que adiciona tipagem estática.
+- **TailwindCSS**: Framework CSS utilitário para estilização rápida e responsiva.
+- **Vitest**: Framework de testes para Vite, React Testing Library.
 
-## Expanding the ESLint configuration
+## Pré-requisitos
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Antes de começar, você precisará ter o seguinte instalado em sua máquina:
 
-- Configure the top-level `parserOptions` property like this:
+- [Node.js](https://nodejs.org/) (v18 ou superior)
+- [NPM](https://www.npmjs.com/) ou [Yarn](https://yarnpkg.com/) (geralmente vem com o Node.js)
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Como Rodar o Projeto Localmente
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+Siga os passos abaixo para rodar o projeto em sua máquina:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+1. **Clone o repositório**
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+   git clone [https://github.com/Tauana-Pacheco/marvel.git](https://github.com/Tauana-Pacheco/marvel.git)
+
+   ```bash
+   cd marvel
+   ```
+
+2. **Instale as dependências**
+
+   ```bash
+   npm install
+   ou
+   yarn install
+   ```
+
+3. **Configure a API da Marvel**
+
+- Acesse o site da Marvel Developers e crie uma conta.
+- Gere uma _public key_ e uma _private key_.
+- Crie um arquivo .env na raiz do projeto e adicione as seguintes variáveis:
+
+  ```bash
+   VITE_MARVEL_PUBLIC_KEY=SUA_PUBLIC_KEY
+   VITE_MARVEL_PRIVATE_KEY=SUA_PRIVATE_KEY
+  ```
+
+- Certifique-se de não compartilhar sua private key.
+
+4. \*\*Rode o projeto
+
+   ```bash
+   npm run dev
+   ```
+
+- O servidor de desenvolvimento será iniciado e você poderá acessar a aplicação no endereço http://localhost:5173 (ou outra porta, se especificada).
+
+5. **Rodar os testes**
+
+   ```bash
+   npm run test
+   ```
+
+## Estrutura do Projeto
+
+```bash
+ marvel/
+ ├── public/               # Arquivos públicos (imagens, ícones, etc.)
+ ├── src/                  # Código-fonte da aplicação
+ │   ├── components/       # Componentes React reutilizáveis
+ │   │    ├── Accordion    # Componente de acordeão
+ │   │    ├── Button       # Componente de botão
+ │   │    ├── Card         # Componente de card
+ │   │    ├── Input        # Componente de input
+ │   ├── pages/            # Páginas da aplicação
+ │   │    ├── Marvel       # Página principal com a lista de personagens
+ │   ├── services/         # Serviços para chamadas à API
+ │   ├── index.css         # Estilos globais
+ │   ├── main.tsx          # Ponto de entrada da aplicação
+ │   ├── utils.tsx         # Funções utilitárias
+ │   └── vite-env.d.ts     # Definições de tipos para Vite
+ ├── .env                  # Variáveis de ambiente
+ ├── .gitignore            # Arquivos e diretórios ignorados pelo Git
+ ├── eslint.config.js      # Configuração do ESLint
+ ├── index.html            # Página HTML principal
+ ├── package-lock.json     # Versões exatas das dependências instaladas
+ ├── package.json          # Dependências e scripts do projeto
+ ├── postcss.config.cjs    # Configuração do PostCSS
+ ├── tailwind.config.js    # Configuração do TailwindCSS
+ ├── tsconfig.app.json     # Configuração do TypeScript para a aplicação
+ ├── tsconfig.json         # Configuração principal do TypeScript
+ ├── tsconfig.node.json    # Configuração do TypeScript para Node.js
+ ├── vite.config.ts        # Configuração do Vite
+ └── vitest-setup.ts       # Configuração do Vitest para testes
 ```
