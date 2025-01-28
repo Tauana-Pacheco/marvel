@@ -9,8 +9,7 @@ export interface IInput {
   className?: string
 }
 
-const baseStyles =
-  "bg-transparent w-full placeholder-gray-500 placeholder-opacity-75 mr-2 py-1 px-2 focus:outline-none"
+const baseStyles = "bg-transparent w-full mr-2 py-1 px-2 focus:outline-none"
 
 export default function Input({
   ariaLabel,
