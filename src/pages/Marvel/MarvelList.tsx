@@ -1,7 +1,6 @@
 import { useState, ChangeEvent, FormEvent, useEffect } from "react"
 import { useSearchParams } from "react-router"
 import { useInfiniteQuery } from "@tanstack/react-query"
-import "./MarvelList.css"
 import { fetchCharacters } from "./utils"
 import { ICharacter } from "./types"
 import Button from "../../components/Button"
