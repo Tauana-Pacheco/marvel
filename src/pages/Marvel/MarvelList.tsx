@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, FormEvent } from "react"
+import { useState, ChangeEvent, FormEvent, useEffect } from "react"
 import { useSearchParams } from "react-router"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import "./MarvelList.css"
@@ -36,12 +36,12 @@ export function MarvelList() {
     },
   })
 
+  useEffect(() => {
+    refetch()
+  }, [searchParams, refetch])
+
   if (status === "pending") {
-    return (
-      <div data-testid="loading" className="font-mono">
-        {dict.isLoading}
-      </div>
-    )
+    return <div className="font-mono">{dict.isLoading}</div>
   }
 
   if (status === "error") {
@@ -62,7 +62,6 @@ export function MarvelList() {
       }
       return state
     })
-    refetch()
   }
 
   const handleClearSearch = () => {
@@ -71,10 +70,10 @@ export function MarvelList() {
       state.delete("search")
       return state
     })
-    refetch()
   }
 
-  const noResults = data?.pages?.[0]?.data?.results.length === 0
+  const results = data?.pages?.[0]?.data?.results
+  const noResults = results.length === 0
   const isSearchEmpty = noResults && searchValue
 
   let buttonText
@@ -86,8 +85,7 @@ export function MarvelList() {
     buttonText = dict.noLoading
   }
 
-  const cleanSearch =
-    (data?.pages?.[0]?.data?.results.length > 0 && searchValue) || !hasNextPage
+  const cleanSearch = (results.length > 0 && searchValue) || !hasNextPage
   const disabledButton = !hasNextPage || isFetchingNextPage || !dict.noLoading
   const showSearchButton = inputValue !== ""
 
@@ -118,7 +116,7 @@ export function MarvelList() {
         )}
         {cleanSearch && (
           <Button
-            ariaLabel="limpar pesquisa"
+            ariaLabel="Limpar pesquisa"
             onClick={handleClearSearch}
             className="ml-2 text-gray-500 hover:text-gray-700 focus:outline-none"
           >
@@ -175,7 +173,7 @@ export function MarvelList() {
 
       {!isSearchEmpty && (
         <Button
-          ariaLabel="carrega personagens"
+          ariaLabel="Carregar heróis"
           onClick={fetchNextPage}
           disabled={disabledButton}
           className="mt-4 p-2 bg-primary text-dark button"
