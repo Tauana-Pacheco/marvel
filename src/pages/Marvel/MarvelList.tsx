@@ -71,7 +71,7 @@ export function MarvelList() {
     })
   }
 
-  const results = data?.pages?.[0]?.data?.results
+  const results = data?.pages?.[0]?.data?.results || []
   const noResults = results.length === 0
   const isSearchEmpty = noResults && searchValue
 
@@ -140,7 +140,10 @@ export function MarvelList() {
               </h3>
               {character.thumbnail && (
                 <img
-                  src={`${character.thumbnail.path}.${character.thumbnail.extension}`}
+                  src={
+                    character.thumbnail.url ||
+                    `${character.thumbnail.path}.${character.thumbnail.extension}`
+                  }
                   alt={character.name}
                   className="w-full rounded-lg"
                 />

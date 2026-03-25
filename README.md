@@ -1,6 +1,6 @@
 # O Infinito Marvel
 
-Este projeto é uma aplicação web onde os usuários podem visualizar e buscar personagens do universo Marvel utilizando a [API da Marevel](https://developer.marvel.com/). Foi desenvolvido com tecnologias modernas para oferecer uma experiência rápida e responsiva.
+Este projeto é uma aplicação web onde os usuários podem visualizar e buscar personagens utilizando a [SuperHero API](https://superheroapi.com). Foi desenvolvido com tecnologias modernas para oferecer uma experiência rápida e responsiva.
 
 ## Tecnologias Utilizadas
 
@@ -37,18 +37,10 @@ Siga os passos abaixo para rodar o projeto em sua máquina:
    yarn install
    ```
 
-3. **Configure a API da Marvel**
+3. **Configure a API**
 
-- Acesse o site da Marvel Developers e crie uma conta.
-- Gere uma _public key_ e uma _private key_.
-- Crie um arquivo .env na raiz do projeto e adicione as seguintes variáveis:
-
-  ```bash
-   VITE_MARVEL_PUBLIC_KEY=SUA_PUBLIC_KEY
-   VITE_MARVEL_PRIVATE_KEY=SUA_PRIVATE_KEY
-  ```
-
-- Certifique-se de não compartilhar sua private key.
+- O projeto já está configurado para consumir a `SuperHero API`.
+- Se quiser trocar o token de acesso, atualize o valor em `src/utils.ts`.
 
 4. **Rode o projeto**
 

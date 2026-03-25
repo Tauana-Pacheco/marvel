@@ -1,6 +1,7 @@
 interface IImage {
   path?: string
   extension?: string
+  url?: string
 }
 interface IItemsName {
   name: string
@@ -32,4 +33,23 @@ export interface ICharacterDataWrapper {
 export interface IFetchCharacters {
   pageParam?: number
   queryKey: string[]
+}
+
+export interface ISuperheroApiCharacter {
+  id: string
+  name?: string
+  biography?: {
+    "full-name"?: string
+    aliases?: string[]
+  }
+  work?: {
+    occupation?: string
+  }
+  connections?: {
+    "group-affiliation"?: string
+    relatives?: string
+  }
+  image?: {
+    url?: string
+  }
 }
